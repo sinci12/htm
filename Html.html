@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydra Animation</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1e3c72, #2a5298);
+            --label-color: #fff;
+            --shadow-color: rgba(255, 255, 255, 0.8);
+            --particle-color: rgba(255, 255, 255, 0.8);
+            --button-bg: linear-gradient(45deg, #ff00ff, #00ffff);
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #1e1e1e, #2b2b2b);
+            --label-color: #ddd;
+            --shadow-color: rgba(255, 255, 255, 0.6);
+            --particle-color: rgba(255, 255, 255, 0.5);
+            --button-bg: linear-gradient(45deg, #7200ca, #00bcd4);
+        }
+
+        body {
+            margin: 0;
+            height: 200vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--bg-gradient);
+            font-family: 'Arial', sans-serif;
+            transition: background 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .hydra-label {
+            font-size: 5rem;
+            font-weight: bold;
+            color: var(--label-color);
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0 0 10px var(--shadow-color);
+            margin-top: 50px;
+        }
+
+        .hydra-label::before, .hydra-label::after {
+            content: "Hydra";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            color: transparent;
+            text-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff;
+            animation: flicker 2s infinite;
+        }
+
+        .hydra-label::before {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 0.9;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .hydra-label {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--particle-color);
+            border-radius: 50%;
+            animation: moveParticle 5s linear infinite;
+        }
+
+        @keyframes moveParticle {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .download-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: var(--button-bg);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: floatButton 3s ease-in-out infinite;
+        }
+
+        .download-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes floatButton {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background: var(--button-bg);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .theme-switch:hover {
+            background: linear-gradient(45deg, #7200ca, #00bcd4);
+        }
+
+        .discord-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: var(--button-bg);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: floatButton 3s ease-in-out infinite;
+        }
+
+        .discord-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-section {
+            max-width: 800px;
+            margin: 150vh auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            color: var(--label-color);
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .info-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-section h2 {
+            margin: 0 0 10px;
+            font-size: 2rem;
+        }
+
+        .info-section p {
+            line-height: 1.6;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-switch" onclick="toggleTheme()">Switch Theme</button>
+    <div class="hydra-label">Hydra</div>
+    <button class="download-button" onclick="window.open('https://github.com/sinci12/hydra/releases/download/hydra/Hydra.zip', '_blank')">Download Hydra</button>
+    <button class="discord-button" onclick="window.open('https://discord.gg/fSdMtWED9t', '_blank')">Discord</button>
+    <div class="particles">
+        <!-- Particle elements generated by JavaScript -->
+    </div>
+
+    <div class="info-section" id="info-section">
+        <h2>About Hydra</h2>
+        <p>
+            Hydra is a powerful multi api executor from 2022.
+        </p>
+        <p>
+            Explore its capabilities and see how Hydra can transform your Roblox exploiting Experience.
+        </p>
+    </div>
+
+    <script>
+        const particlesContainer = document.querySelector('.particles');
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 5 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            particlesContainer.appendChild(particle);
+
+            particle.addEventListener('animationend', () => {
+                particle.remove();
+            });
+        }
+
+        setInterval(createParticle, 200);
+
+        const infoSection = document.getElementById('info-section');
+
+        window.addEventListener('scroll', () => {
+            const sectionTop = infoSection.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+
+            if (sectionTop < windowHeight - 100) {
+                infoSection.classList.add('visible');
+            }
+        });
+
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'light');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        }
+    </script>
+</body>
+</html>
